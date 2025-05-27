@@ -1,0 +1,272 @@
+﻿<UserControl x:Class="ChessAnalysisApp.Views.ChessEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ChessAnalysisApp.ViewModels"
+             xmlns:conv="clr-namespace:ChessAnalysisApp.Converters"
+             xmlns:models="clr-namespace:ChessAnalysisApp.Models"
+             xmlns:local="clr-namespace:ChessAnalysisApp.Views"
+             x:Name="EditorView">
+
+    <UserControl.DataContext>
+        <vm:BoardViewModel />
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <conv:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
+    </UserControl.Resources>
+    
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Liste des pièces à gauche -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <ListBox Grid.Row="0" ItemsSource="{Binding BlackPieces}" Background="#FDEEC8" >
+                <ListBox.ItemTemplate >
+                    <DataTemplate >
+                        <StackPanel Orientation="Horizontal" Margin="5" >
+                            <Image Source="{Binding ImagePath}" Width="32" Height="32" Margin="0,0,5,0" MouseMove="GroupedPiece_MouseMove"/>
+                            <TextBlock Text="{Binding Count, StringFormat='x{0}'}" VerticalAlignment="Center" FontWeight="Bold"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" >
+                <Button Width="75" Height="60" Command="{Binding ResetToStartingPositionCommand}">
+                    <TextBlock Text="Position de départ" TextWrapping="Wrap" TextAlignment="Center" />
+                </Button>
+            </StackPanel>
+
+
+            <ListBox Grid.Row="2" ItemsSource="{Binding WhitePieces}" Background="#FDEEC8" >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5" VerticalAlignment="Center">
+                            <Image Source="{Binding ImagePath}" Width="32" Height="32" Margin="0,0,5,0" MouseMove="GroupedPiece_MouseMove"/>
+                            <TextBlock Text="{Binding Count, StringFormat='x{0}'}" VerticalAlignment="Center" FontWeight="Bold"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
+        <Viewbox Grid.Column="1" Stretch="Uniform">
+            <Border Padding="20" Background="#FFEFEFEF">
+                <Grid>
+                    <!-- Colonnes : chiffres + échiquier -->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48"/>
+                        <ColumnDefinition Width="384"/>
+                        <ColumnDefinition Width="80"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Lignes : échiquier + lettres -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="384"/>
+                        <RowDefinition Height="48"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="1">
+                        <TextBlock Text="Coup recommandé :" FontWeight="Bold" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding BestMove}" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center" FontWeight="Bold" Foreground="Blue"/>
+                    </StackPanel>
+                    
+
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" >
+                        <TextBlock Text="8" HorizontalAlignment="Right" VerticalAlignment="Center"  Height="48" Padding="16" FontWeight="UltraBold"/>
+                        <TextBlock Text="7" HorizontalAlignment="Right" VerticalAlignment="Center" Height="48" Padding="16" FontWeight="UltraBold"/>
+                        <TextBlock Text="6" HorizontalAlignment="Right" VerticalAlignment="Center" Height="48" Padding="16" FontWeight="UltraBold"/>
+                        <TextBlock Text="5" HorizontalAlignment="Right" VerticalAlignment="Center" Height="48" Padding="16" FontWeight="UltraBold"/>
+                        <TextBlock Text="4" HorizontalAlignment="Right" VerticalAlignment="Center" Height="48" Padding="16" FontWeight="UltraBold"/>
+                        <TextBlock Text="3" HorizontalAlignment="Right" VerticalAlignment="Center" Height="48" Padding="16" FontWeight="UltraBold"/>
+                        <TextBlock Text="2" HorizontalAlignment="Right" VerticalAlignment="Center" Height="48" Padding="16" FontWeight="UltraBold"/>
+                        <TextBlock Text="1" HorizontalAlignment="Right" VerticalAlignment="Center" Height="48" Padding="16" FontWeight="UltraBold"/>
+                    </StackPanel>
+
+                    <Grid Grid.Row="1" Grid.Column="1">
+                        <ItemsControl ItemsSource="{Binding AllSquares}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Rows="8" Columns="8"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="Black" BorderThickness="0.5"
+                                    Background="{Binding Color}"
+                                    AllowDrop="True"
+                                    Drop="Board_Drop"
+                                    DragOver="Board_DragOver"
+                                    MouseRightButtonUp="BoardSquare_RightClick"
+                                    MouseMove="BoardPiece_MouseMove">
+                                        <Image Source="{Binding ImagePath}"
+                                       Width="48" Height="48"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+
+                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" >
+                        <TextBlock Text="a" Width="48" TextAlignment="Center" FontWeight="UltraBold"/>
+                        <TextBlock Text="b" Width="48" TextAlignment="Center" FontWeight="UltraBold"/>
+                        <TextBlock Text="c" Width="48" TextAlignment="Center" FontWeight="UltraBold"/>
+                        <TextBlock Text="d" Width="48" TextAlignment="Center" FontWeight="UltraBold"/>
+                        <TextBlock Text="e" Width="48" TextAlignment="Center" FontWeight="UltraBold"/>
+                        <TextBlock Text="f" Width="48" TextAlignment="Center" FontWeight="UltraBold"/>
+                        <TextBlock Text="g" Width="48" TextAlignment="Center" FontWeight="UltraBold"/>
+                        <TextBlock Text="h" Width="48" TextAlignment="Center" FontWeight="UltraBold"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Grid.Row="1" VerticalAlignment="Center">
+
+                        <Grid Width="80">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Rectangle Grid.Row="1" Grid.Column="0"
+                                Fill="White"
+                                Width="30"
+                                Height="{Binding EvaluationWhiteHeight}"
+                                HorizontalAlignment="Center"       
+                                VerticalAlignment="Top" />
+
+                            <Rectangle Grid.Row="0" Grid.Column="0"
+                                Fill="Black"
+                                Height="{Binding EvaluationBlackHeight}"
+                                Width="30"
+                                VerticalAlignment="Bottom" 
+                                HorizontalAlignment="Center"
+                                />
+
+                            <TextBlock Grid.Column="1" Grid.RowSpan="2"
+                                Text="{Binding EvaluationText}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                        Background="#A76E37"
+                                        Foreground="{Binding EvaluationTextColor}"
+                                        VerticalAlignment="Center"
+                                        FontWeight="Bold"
+                                        FontSize="14" />
+                        </Grid>
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+        </Viewbox>
+
+        <Border Grid.Column="3" Background="#FADD90" Padding="15">
+            <StackPanel VerticalAlignment="Center" >
+
+
+                <Button x:Name="HelpButton"
+                    Content="En savoir +"
+                    Width="90"
+                    Height="30"
+                    FontWeight="Bold"
+                    FontSize="12"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Margin="10"
+                    Click="HelpButton_Click" />
+
+                <Popup x:Name="HelpPopup"
+                    PlacementTarget="{Binding ElementName=HelpButton}"
+                    Placement="Relative"
+                    HorizontalOffset="-600"
+                    VerticalOffset="-150"
+                    StaysOpen="False"
+                    Width="500">
+                    <local:HelpView />
+                </Popup>
+
+                <TextBlock Text="Trait au joueur :" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                <StackPanel Orientation="Vertical" Margin="0,0,0,20">
+                    <RadioButton Content="Blanc" GroupName="PlayerToMove" IsChecked="{Binding IsWhiteTurn}" />
+                    <RadioButton Content="Noir" GroupName="PlayerToMove" IsChecked="{Binding IsBlackTurn}" />
+                </StackPanel>
+
+                <StackPanel Margin="10">
+                    <TextBlock Text="Case En Passant (ex: e3 ou -)" />
+                    <TextBox Text="{Binding EnPassantInput, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                </StackPanel>
+
+                <GroupBox Header="Droits de roque" Margin="10">
+                    <StackPanel>
+                        <CheckBox Content="Blanc - Petit roque" IsChecked="{Binding WhiteCanCastleKingSide}" />
+                        <CheckBox Content="Blanc - Grand roque" IsChecked="{Binding WhiteCanCastleQueenSide}" />
+                        <CheckBox Content="Noir - Petit roque" IsChecked="{Binding BlackCanCastleKingSide}" />
+                        <CheckBox Content="Noir - Grand roque" IsChecked="{Binding BlackCanCastleQueenSide}" />
+                    </StackPanel>
+                </GroupBox>
+
+                <Button Content="Analyser" Width="90" Height="35" Command="{Binding AnalyzeCommand}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#A76E37"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="BorderBrush" Value="#54371C"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Padding" Value="5,2"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="8" 
+                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#66BB6A"/>
+                                                <Setter Property="BorderBrush" Value="#2E7D32"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="#388E3C"/>
+                                                <Setter Property="BorderBrush" Value="#1B5E20"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Background" Value="#C8E6C9"/>
+                                                <Setter Property="Foreground" Value="#9E9E9E"/>
+                                                <Setter Property="BorderBrush" Value="#A5D6A7"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Border>
+
+    </Grid>
+</UserControl>

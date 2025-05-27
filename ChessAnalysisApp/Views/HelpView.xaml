@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="ChessAnalysisApp.Views.HelpView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="White">
+    
+        <ScrollViewer Margin="30"
+                  VerticalScrollBarVisibility="Hidden"
+              HorizontalScrollBarVisibility="Hidden">
+        <StackPanel Margin="30" Width="400">
+            <TextBlock Text="A propos" FontSize="20" FontWeight="Bold" TextAlignment="Center" Margin="0,0,0,15"/>
+
+            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">
+                Cette application permet de composer une position d'échecs personnalisée et de la faire analyser par Stockfish.
+            </TextBlock>
+
+            <TextBlock FontWeight="Bold" Text="Points importants" Margin="0,10,0,5"/>
+            <TextBlock TextWrapping="Wrap">
+                    • Les 2 rois doivent obligatoirement se trouver sur l'échiquier pour obtenir une analyse de la position.
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                    • Les droits de roques sont cochés par défaut (c'est à dire que l'on considère qu'il n'y a pas d'obstacle au petit ou grand roque pour les deux camps).
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                    • Si le dernier coup joué de la position est une avancé d'un pion de 2 cases et qu'un pion adverse se trouve en position de réaliser une prise en passant il faut indiquer LA CASE D'ARRIVÉ de la prise en passant.
+            </TextBlock>
+
+            <TextBlock FontWeight="Bold" Text="Fonctionnalités principales :" Margin="0,10,0,5"/>
+            <TextBlock TextWrapping="Wrap">
+                • Glisser-déposer des pièces.
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                • Clic-droit sur une pièce pour remettre celle-ci dans la réserve.
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                • Bouton "Position de départ" pour mettre l'échiquier dans sa position de départ..
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                • Bouton "Analyser" pour obtenir l’évaluation.
+            </TextBlock>
+
+            <TextBlock FontWeight="Bold" Text="Évaluation :" Margin="0,10,0,5"/>
+            <TextBlock TextWrapping="Wrap">
+                • Le coup recommandé par stockfish dans la position (si il y en a un).
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                • La barre montre l’avantage visuel blanc/noir.
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                • Le texte indique : une valeur positive (si le joueur ayant le trait a l'avantage) ou négative (si le joueur ayant le trait n'a pas l'avantage), Mx (avec x représentant le nombre de coup nécessaire pour arriver à un echec et mat), Mat, Pat.
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                • La couleur du texte est de la couleur des pièces ayant l'avantage.
+            </TextBlock>
+
+
+            <TextBlock FontStyle="Italic" Foreground="Gray" Margin="0,20,0,0">
+                Développé par Aurélien Piclin
+            </TextBlock>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
